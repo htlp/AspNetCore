@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
@@ -129,6 +129,7 @@ namespace Microsoft.AspNetCore.Http.Tests
         {
             var pipeReader = new StreamPipeReader(new HangingStream());
             var cts = new CancellationTokenSource(1);
+            await Task.Delay(1);
             await Assert.ThrowsAsync<TaskCanceledException>(async () => await pipeReader.ReadAsync(cts.Token));
         }
 

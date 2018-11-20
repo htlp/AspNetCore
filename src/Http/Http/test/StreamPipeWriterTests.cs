@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
@@ -313,6 +313,13 @@ namespace Microsoft.AspNetCore.Http.Tests
             await Task.Delay(30000, cancellationToken);
             return 0;
         }
+#if NETCOREAPP2_2
+        public override async ValueTask<int> ReadAsync(Memory<byte> destination, CancellationToken cancellationToken = default)
+        {
+            await Task.Delay(30000, cancellationToken);
+            return 0;
+        }
+#endif
     }
 
     internal class SingleWriteStream : MemoryStream
