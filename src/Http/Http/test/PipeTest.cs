@@ -11,25 +11,42 @@ namespace Microsoft.AspNetCore.Http.Tests
     {
         protected const int MaximumSizeHigh = 65;
 
+        protected const int MinimumReadSize = 4096;
+
         public MemoryStream MemoryStream { get; set; }
 
         public PipeWriter Writer { get; set; }
 
+        public PipeReader Reader { get; set; }
+
         protected PipeTest()
         {
             MemoryStream = new MemoryStream();
-            Writer = new StreamPipeWriter(MemoryStream, 4096, new TestMemoryPool());
+            Writer = new StreamPipeWriter(MemoryStream, MinimumReadSize, new TestMemoryPool());
+            Reader = new StreamPipeReader(MemoryStream, MinimumReadSize, new TestMemoryPool());
         }
 
         public void Dispose()
         {
             Writer.Complete();
+            Reader.Complete();
         }
 
         public byte[] Read()
         {
             Writer.FlushAsync().GetAwaiter().GetResult();
             return ReadWithoutFlush();
+        }
+
+        public void Write(byte[] data)
+        {
+            MemoryStream.Write(data, 0, data.Length);
+            MemoryStream.Position = 0;
+        }
+
+        public void WriteWithoutPosition(byte[] data)
+        {
+            MemoryStream.Write(data, 0, data.Length);
         }
 
         public byte[] ReadWithoutFlush()
