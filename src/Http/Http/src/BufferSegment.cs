@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -21,6 +21,7 @@ namespace Microsoft.AspNetCore.Http
             {
                 _end = value;
                 Memory = AvailableMemory.Slice(Start, _end - Start);
+
             }
         }
 

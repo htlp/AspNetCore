@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
@@ -11,7 +11,7 @@ namespace Microsoft.AspNetCore.Http.Tests
     {
         protected const int MaximumSizeHigh = 65;
 
-        protected const int MinimumReadSize = 4096;
+        protected const int MinimumSegmentSize = 4096;
 
         public MemoryStream MemoryStream { get; set; }
 
@@ -22,8 +22,8 @@ namespace Microsoft.AspNetCore.Http.Tests
         protected PipeTest()
         {
             MemoryStream = new MemoryStream();
-            Writer = new StreamPipeWriter(MemoryStream, MinimumReadSize, new TestMemoryPool());
-            Reader = new StreamPipeReader(MemoryStream, MinimumReadSize, new TestMemoryPool());
+            Writer = new StreamPipeWriter(MemoryStream, MinimumSegmentSize, new TestMemoryPool());
+            Reader = new StreamPipeReader(MemoryStream, MinimumSegmentSize, new TestMemoryPool());
         }
 
         public void Dispose()

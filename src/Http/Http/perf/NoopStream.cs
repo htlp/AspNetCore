@@ -31,15 +31,13 @@ namespace Microsoft.AspNetCore.Http
 
         public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
-            return base.ReadAsync(buffer, offset, count, cancellationToken);
+            return Task.FromResult<int>(0);
         }
 
-#if NETCOREAPP2_2
         public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)
         {
-            return base.ReadAsync(buffer, cancellationToken);
+            return new ValueTask<int>(0);
         }
-#endif
 
         public override long Seek(long offset, SeekOrigin origin)
         {

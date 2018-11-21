@@ -37,13 +37,13 @@ namespace Microsoft.AspNetCore.Http.Tests
             Write(Encoding.ASCII.GetBytes(new string('a', 10000)));
             var readResult = await Reader.ReadAsync();
 
-            Assert.Equal(MinimumReadSize, readResult.Buffer.Length);
+            Assert.Equal(MinimumSegmentSize, readResult.Buffer.Length);
             Assert.True(readResult.Buffer.IsSingleSegment);
 
             Reader.AdvanceTo(readResult.Buffer.Start, readResult.Buffer.End);
 
             readResult = await Reader.ReadAsync();
-            Assert.Equal(MinimumReadSize * 2, readResult.Buffer.Length);
+            Assert.Equal(MinimumSegmentSize * 2, readResult.Buffer.Length);
             Assert.False(readResult.Buffer.IsSingleSegment);
 
             Reader.AdvanceTo(readResult.Buffer.Start, readResult.Buffer.End);
@@ -61,13 +61,13 @@ namespace Microsoft.AspNetCore.Http.Tests
             Write(Encoding.ASCII.GetBytes(new string('a', 10000)));
 
             var readResult = await Reader.ReadAsync();
-            Assert.Equal(MinimumReadSize, readResult.Buffer.Length);
+            Assert.Equal(MinimumSegmentSize, readResult.Buffer.Length);
             Assert.True(readResult.Buffer.IsSingleSegment);
 
             Reader.AdvanceTo(readResult.Buffer.End);
 
             readResult = await Reader.ReadAsync();
-            Assert.Equal(MinimumReadSize, readResult.Buffer.Length);
+            Assert.Equal(MinimumSegmentSize, readResult.Buffer.Length);
             Assert.True(readResult.Buffer.IsSingleSegment);
         }
 
@@ -352,6 +352,32 @@ namespace Microsoft.AspNetCore.Http.Tests
             Reader.CancelPendingRead();
             var task = Reader.ReadAsync();
             Assert.True(IsTaskWithResult(task));
+        }
+
+        [Fact]
+        public async Task AdvancePastMinReadSizeReadAsyncReturnsMoreData()
+        {
+            Reader = new StreamPipeReader(MemoryStream, 16, new TestMemoryPool());
+            Write(new byte[32]);
+            var result = await Reader.ReadAsync();
+            Assert.Equal(16, result.Buffer.Length);
+
+            Reader.AdvanceTo(result.Buffer.GetPosition(12), result.Buffer.End);
+            result = await Reader.ReadAsync();
+            Assert.Equal(20, result.Buffer.Length);
+        }
+
+        [Fact]
+        public async Task AdvanceWithSmallMinReadSizeReadAsyncReturnsSameData()
+        {
+            Reader = new StreamPipeReader(MemoryStream, 16, new TestMemoryPool());
+            Write(new byte[32]);
+            var result = await Reader.ReadAsync();
+            Assert.Equal(16, result.Buffer.Length);
+
+            Reader.AdvanceTo(result.Buffer.GetPosition(12), result.Buffer.End);
+            result = await Reader.ReadAsync();
+            Assert.Equal(4, result.Buffer.Length);
         }
 
         private bool IsTaskWithResult<T>(ValueTask<T> task)

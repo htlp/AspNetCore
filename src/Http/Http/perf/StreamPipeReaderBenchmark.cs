@@ -28,7 +28,7 @@ namespace Microsoft.AspNetCore.Http
         }
 
         [Benchmark]
-        public async Task WriteHelloWorldLargeWrite()
+        public async Task ReadHelloWorld()
         {
             var result = await _pipeReaderHelloWorld.ReadAsync();
             _pipeReaderHelloWorld.AdvanceTo(result.Buffer.End);
@@ -40,7 +40,7 @@ namespace Microsoft.AspNetCore.Http
             public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
             {
                 bytes.CopyTo(buffer, 0);
-                return new Task<int>(() => 11);
+                return Task.FromResult(11);
             }
 
             public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)

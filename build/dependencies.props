@@ -128,7 +128,7 @@
   <PropertyGroup Label="Package Versions: Pinned">
     <!-- 3rd party dependencies -->
     <AngleSharpPackageVersion>0.9.9</AngleSharpPackageVersion>
-    <BenchmarkDotNetPackageVersion>0.10.13</BenchmarkDotNetPackageVersion>
+    <BenchmarkDotNetPackageVersion>0.11.2</BenchmarkDotNetPackageVersion>
 
     <!--
       BenchmarksOnly* package versions come from NuGet.org and are intended only for use in benchmarks apps where EF

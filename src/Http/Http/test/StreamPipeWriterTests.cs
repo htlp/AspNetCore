@@ -17,7 +17,6 @@ namespace Microsoft.AspNetCore.Http.Tests
         [Fact]
         public async Task CanWriteAsyncMultipleTimesIntoSameBlock()
         {
-
             await Writer.WriteAsync(new byte[] { 1 });
             await Writer.WriteAsync(new byte[] { 2 });
             await Writer.WriteAsync(new byte[] { 3 });
